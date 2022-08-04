@@ -8,9 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorygame.models.BoardSize
 import kotlin.math.min
 
-class MemoryBoardAdapter(private val context: Context, private val numPieces: Int) :
+class MemoryBoardAdapter(
+    private val context: Context,
+    private val boardSize: BoardSize,
+    private val cardImages: List<Int>
+) :
     RecyclerView.Adapter<MemoryBoardAdapter.ViewHolder>() {
 
     companion object{
@@ -23,8 +28,8 @@ class MemoryBoardAdapter(private val context: Context, private val numPieces: In
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val cardWidth = parent.width/2 - (2* MARGIN_SIZE)
-        val cardHeight = parent.height/4 - (2* MARGIN_SIZE)
+        val cardWidth = parent.width/boardSize.getWidth() - (2* MARGIN_SIZE)
+        val cardHeight = parent.height/boardSize.getHeight() - (2* MARGIN_SIZE)
         val cardSideLength : Int = min(cardWidth,cardHeight)
         val view : View = LayoutInflater.from(context).inflate(R.layout.memory_card,parent,false)
          val layoutParams :ViewGroup.MarginLayoutParams =   view.findViewById<CardView>(R.id.cardView).layoutParams as ViewGroup.MarginLayoutParams
@@ -35,7 +40,7 @@ class MemoryBoardAdapter(private val context: Context, private val numPieces: In
        return ViewHolder(view)
     }
 
-    override fun getItemCount() = numPieces
+    override fun getItemCount() = boardSize.numCard
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,6 +51,8 @@ class MemoryBoardAdapter(private val context: Context, private val numPieces: In
         private val  imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
 
         fun bind(position: Int) {
+            imageButton.setImageResource(cardImages[position])
+
             imageButton.setOnClickListener{
                 Log.i(TAG,"Clicked on position ${position}")
             }
